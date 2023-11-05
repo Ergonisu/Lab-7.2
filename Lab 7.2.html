@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Fetch Quest</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@vuetify@3.0.0-beta.0/dist/vuetify.js"></script>
+
+</head>
+<body>
+	<div id="app">
+      <app-readjson></app-readjson>
+	</div>
+
+	<script>  
+	const vuetify = new Vuetify( );  
+	const app = Vue.createApp({	});
+
+	app.use(vuetify);
+	app.component('app-readjson', {
+		data() {
+			return  {title:'',body:'',err:'',msg:''};
+		},  
+		template: `	
+			<v-app> 
+        <v-container>
+          <v-form>
+          <v-text-field label="Title" v-model="title" ></v-text-field>
+          <v-text-field label="Message" v-model="body" ></v-text-field>
+          <v-btn @click="postData(title,body)", color="primary">Add</v-btn>
+          </v-form>
+          <p>Message: {{msg}}</p>
+          <p v-show="err">Error (if any): {{err}}</p>
+        </v-container>
+			</v-app>
+		`,
+	methods: {   	
+			postData(title, body){
+        fetch('', {          
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },			
+          body: JSON.stringify({
+              userId:1,
+              id:1,
+              title: title,
+              body: body
+          })
+        })
+        .then(response => {
+          if (!response.ok) {
+            this.err = response.status;
+          } else {
+            return response.json();
+          }
+        })
+        .then(data => 
+          this.msg=data 
+        )
+        .catch(error => {this.err=error})
+			}
+
+}
+})
+app.use(vuetify);
+app.mount('#app')
+
+	</script>
+</body>
+</html>
